@@ -4,14 +4,21 @@ import pymysql
 import bcrypt
 from flasgger import Swagger
 
+# Configuración global de conexión
+db_config = {
+    "host": "localhost",
+    "user": "root",
+    "passwd": "12345678",
+    "db": "gestor_contrasena",
+    "charset": "utf8mb4"
+}
+# Función única de conexión
+def conectar():
+    return pymysql.connect(**db_config)
+
 app = Flask(__name__)
 CORS(app)
 swagger = Swagger(app)
-
-# Conexion a la base de datos
-def conectar(vhost, vuser, vpass, vdb):
-    conn = pymysql.connect(host=vhost, user=vuser, passwd=vpass, db=vdb, charset='utf8mb4')
-    return conn
 
 #Ruta para consulta general
 @app.route("/", methods=['GET'])
@@ -23,7 +30,7 @@ def consulta_general():
             descripcion: lista de registro
     """
     try:
-        conn= conectar('localhost', 'root', '12345678', 'gestor_contrasena')
+        conn= conectar()
         cur= conn.cursor()
         cur.execute("SELECT * FROM baul")
         datos = cur.fetchall()
@@ -53,7 +60,7 @@ def consulta_individual(codigo):
             description: registro encontrado
     """
     try:
-        conn = conectar('localhost', 'root', '12345678', 'gestor_contrasena')
+        conn = conectar()
         cur = conn.cursor()
         cur.execute(f"SELECT * FROM baul where id_baul = '{codigo}'")
         datos = cur.fetchone()
@@ -97,7 +104,7 @@ def registro():
         usuario = data['usuario']
         clave = bcrypt.hashpw(data['clave'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
-        conn = conectar('localhost', 'root', '12345678', 'gestor_contrasena')
+        conn = conectar()
         cur = conn.cursor()
         cur.execute("INSERT INTO baul (plataforma, usuario, clave) VALUES (%s,%s,%s)",
         (plataforma, usuario, clave))
@@ -125,7 +132,7 @@ def eliminar(codigo):
         description: Regristro eliminado
     """
     try:
-        conn = conectar('localhost', 'root', '12345678', 'gestor_contrasena')
+        conn = conectar()
         cur = conn.cursor()
         cur.execute("DELETE FROM baul WHERE id_baul = %s",(codigo))
         conn.commit()
@@ -167,7 +174,7 @@ def actualizar(codigo):
         usuario = data['usuario']
         clave = bcrypt.hashpw(data['clave'].enconde('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
-        conn = conectar('localhost', 'root', '12345678', 'gestor_contrasena')
+        conn = conectar()
         cur = conn.cursor()
         cur.execute("UPDATE baul SET plataforma = %s, usuario= %s, clave = %s, WHERE id_baul = %s", (plataforma, usuario, clave, codigo))
         conn.commit()
