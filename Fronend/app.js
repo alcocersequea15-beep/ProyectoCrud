@@ -17,12 +17,12 @@ function visualizar(data) {
                 <!-- Botón para editar -->
                 <button type='button' class='btn btn-info'
                     onclick="location.href = 'edit.html?variable1=${item.id_baul}'">
-                    <img src='imagenes/edit.png' height='30' width='30'/>
+                    <img src='imagenes/editar.png' height='30' width='30'/>
                 </button>
                 <!-- Botón para eliminar -->
                 <button type='button' class='btn btn-warning'
                     onclick="eliminar(${item.id_baul})">
-                    <img src='imagenes/delete.png' height='30' width='30'/>
+                    <img src='imagenes/eliminar-usuario.png' height='30' width='30'/>
                 </button>
             </td>
         </tr>`;
@@ -73,7 +73,7 @@ function registrar() {
         clave: clav
     };
 
-    fetch(`${BASE_URL}/registro`, {
+    fetch(`${BASE_URL}/registro/`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -141,4 +141,13 @@ function modificar(id) {
         }
     })
     .catch(error => console.error('Error:', error));
+}
+function abrirModal() {
+    document.getElementById("overlay").style.display = "block";
+    document.getElementById("modal").style.display = "flex";
+}
+
+function cerrarModal() {
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById("modal").style.display = "none";
 }

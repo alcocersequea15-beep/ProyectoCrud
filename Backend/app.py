@@ -25,6 +25,7 @@ swagger = Swagger(app)
 def consulta_general():
     """
     consulta general del baul de contraseñas
+    ---
     responses:
         200:
             descripcion: lista de registro
@@ -50,6 +51,7 @@ def consulta_general():
 def consulta_individual(codigo):
     """
     Consulta individial por ID
+    ---
     parameters:
         -name:codigo
         in: path
@@ -85,11 +87,11 @@ def registro():
         -name:body
         in:body
         required: true
-        shema:
+        schema:
             type:object
             properties:
             plataforma:
-                type: Strig
+                type: String
             Usuario:
                 type: String
             clave:
@@ -156,7 +158,7 @@ def actualizar(codigo):
     type: integer
     -name: body
     required: true
-    shema:
+    schema:
         type: object
             properties:
                 plataforma:
@@ -172,11 +174,12 @@ def actualizar(codigo):
         data = request.get_json()
         plataforma = data['plataforma']
         usuario = data['usuario']
-        clave = bcrypt.hashpw(data['clave'].enconde('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        clave = bcrypt.hashpw(data['clave'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
         conn = conectar()
         cur = conn.cursor()
-        cur.execute("UPDATE baul SET plataforma = %s, usuario= %s, clave = %s, WHERE id_baul = %s", (plataforma, usuario, clave, codigo))
+        cur.execute("UPDATE baul SET plataforma = %s, usuario = %s, clave = %s WHERE id_baul = %s", 
+                    (plataforma, usuario, clave, codigo))
         conn.commit()
         cur.close()
         conn.close()
