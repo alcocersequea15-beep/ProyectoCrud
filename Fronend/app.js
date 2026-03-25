@@ -10,7 +10,7 @@ function visualizar(data) {
         tabla += `
         <tr data-id="${item.id_baul}">
             <td>${item.id_baul}</td>
-            <td>${item.Plataforma}</td>
+            <td>${item.plataforma}</td>
             <td>${item.usuario}</td>
             <td>${item.clave}</td>
             <td>
@@ -102,7 +102,7 @@ function consulta_individual(id) {
         return response.json();
     })
     .then(data => {
-        document.getElementById("plataforma").value = data.baul.Plataforma;
+        document.getElementById("plataforma").value = data.baul.plataforma;
         document.getElementById("usuario").value = data.baul.usuario;
         document.getElementById("clave").value = data.baul.clave;
     })
